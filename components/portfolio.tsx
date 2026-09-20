@@ -51,7 +51,9 @@ const iconLinkClass = "icon-link";
 function Logo() {
   return (
     <a href="#home" className="brand" aria-label="Nikita Patidar - back to home">
-      <span className="brand-mark">NP</span>
+      <span className="brand-mark" style={{ borderRadius: "999px", overflow: "hidden" }}>
+        <Image src="/nikita-profile.jpg" alt="Nikita Patidar" width={37} height={37} priority style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 32%" }} />
+      </span>
       <span><strong>Nikita.</strong><small>Full Stack Developer</small></span>
     </a>
   );
@@ -155,7 +157,11 @@ function ProjectDialog({ project, onClose }: { project: Project | null; onClose:
             <div><h3>Features</h3><ul>{project.features.map((feature) => <li key={feature}><Check size={15} />{feature}</li>)}</ul></div>
             <div><h3>Role</h3><p>{project.role}</p><h3>Tech stack</h3><div className="tags">{project.tech.map((tech) => <span key={tech}>{tech}</span>)}</div></div>
           </div>
-          {project.github && <a className="button primary compact" href={project.github} target="_blank" rel="noreferrer"><GitFork size={17} /> View on GitHub <ArrowUpRight size={16} /></a>}
+          <div className="project-actions">
+            {project.liveUrl && <a className="button primary compact" href={project.liveUrl} target="_blank" rel="noreferrer">View Live Project <ArrowUpRight size={16} /></a>}
+            {project.adminUrl && <a className="button primary compact" href={project.adminUrl} target="_blank" rel="noreferrer">View Admin Panel <ArrowUpRight size={16} /></a>}
+            {project.github && <a className="button primary compact" href={project.github} target="_blank" rel="noreferrer"><GitFork size={17} /> View on GitHub <ArrowUpRight size={16} /></a>}
+          </div>
         </DialogContent>
       )}
     </Dialog>
@@ -378,7 +384,7 @@ export default function Portfolio() {
                     <div className="project-kicker"><span>{project.number}</span>{project.category}</div>
                     <h3>{project.title}</h3><p>{project.description}</p>
                     <div className="tags">{project.tech.slice(0, 6).map((tech) => <span key={tech}>{tech}</span>)}</div>
-                    <div className="project-actions"><button className="text-link" onClick={() => setSelectedProject(project)}>View details <ArrowRight size={17} /></button><span className="unavailable" title="Add the live URL in app/data.ts">Live URL coming soon</span></div>
+                    <div className="project-actions"><button className="text-link" onClick={() => setSelectedProject(project)}>View details <ArrowRight size={17} /></button>{project.liveUrl && <a className="text-link" href={project.liveUrl} target="_blank" rel="noreferrer">View live project <ArrowUpRight size={17} /></a>}{project.adminUrl && <a className="text-link" href={project.adminUrl} target="_blank" rel="noreferrer">View admin panel <ArrowUpRight size={17} /></a>}</div>
                   </div>
                 </article>
               ))}

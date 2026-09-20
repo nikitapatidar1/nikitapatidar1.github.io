@@ -80,6 +80,7 @@ export type Project = {
   image?: string;
   visual?: "analytics" | "vision";
   liveUrl?: string;
+  adminUrl?: string;
   github?: string;
   role: string;
 };
@@ -90,6 +91,8 @@ export const projects: Project[] = [
     title: "Zayrro \u2014 Travel & Flight Booking Platform",
     category: "Featured Full Stack Live Project",
     image: "/zayrro.png",
+    liveUrl: "https://uat.zayrro.com/",
+    adminUrl: "https://admin.uat.zayrro.com/",
     description: "A comprehensive travel booking platform that brings flights, hotels, visas, attractions and cabs into one connected experience, with live travel data and secure, mobile-friendly booking flows.",
     features: ["Multi-service booking flows", "Live schedules, fares and seat maps", "Benzy Flight API integration", "JWT and OTP authentication", "Stripe payments and AWS S3 storage", "Admin and role management"],
     tech: ["React.js", "TypeScript", "Tailwind CSS", "Node.js", "Express.js", "Prisma", "PostgreSQL", "Stripe", "AWS S3", "Jest"],
@@ -100,6 +103,7 @@ export const projects: Project[] = [
     title: "Vinstar \u2014 Identity Verification Platform",
     category: "Identity Security & Verification",
     image: "/vinstar.png",
+    liveUrl: "https://vinstar.in/",
     description: "A secure identity verification platform that helps businesses onboard genuine users through document submission, guided verification and real-time request tracking.",
     features: ["Identity document submission", "Guided onboarding workflows", "Selfie and identity validation", "Live verification status tracking", "Request management", "Secure information handling"],
     tech: ["React.js", "JavaScript", "Tailwind CSS", "Node.js", "Express.js", "REST APIs", "Authentication"],
@@ -110,6 +114,7 @@ export const projects: Project[] = [
     title: "Zayrro AI Travel Assistant",
     category: "AI Conversational Platform",
     image: "/zayrro-ai.png",
+    liveUrl: "https://chatbot.eyvy.in/",
     description: "An intelligent conversational assistant that helps travelers understand and complete flight, hotel and visa booking processes through immediate, context-aware guidance.",
     features: ["AI-powered travel guidance", "Flight, hotel and visa support", "Context-aware responses", "Conversation history", "Explore and trip navigation", "Responsive chat experience"],
     tech: ["React.js", "JavaScript", "Tailwind CSS", "Node.js", "Express.js", "REST APIs", "AI Integration"],
