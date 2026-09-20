@@ -3,10 +3,14 @@ export const siteConfig = {
   role: "Full Stack Developer",
   location: "Indore, Madhya Pradesh, India",
   email: "patidarnikita008@gmail.com",
+  contactForm: {
+    recipientEmail: "patidarnikita008@gmail.com",
+    endpoint: "https://formsubmit.co/ajax/patidarnikita008@gmail.com",
+  },
   phone: "+91 70240 53902",
   github: "https://github.com/nikitapatidar1",
   linkedin: "https://www.linkedin.com/in/nikita-patidar-590052254",
-  resumeUrl: "/Nikita-Patidar-Resume.pdf",
+  resumeUrl: "/Nikita-Patidar-Resume-Final-2026.pdf",
 };
 
 export const navigation = [
@@ -32,7 +36,7 @@ export const experience = [
   {
     role: "Full Stack Developer",
     company: "Eyvy Solution",
-    period: "Jun 2025 â€” Present",
+    period: "Jun 2025 \u2014 Present",
     place: "Indore, Madhya Pradesh",
     summary: "Building production-ready experiences across the MERN stack.",
     points: [
@@ -46,7 +50,7 @@ export const experience = [
   {
     role: "Backend Developer Intern",
     company: "Wyreflow Technology",
-    period: "Jun 2024 â€” Jun 2025",
+    period: "Jun 2024 \u2014 Jun 2025",
     place: "Bhopal, Madhya Pradesh",
     summary: "Improved API performance, security and reliability for connected web products.",
     points: [
@@ -83,7 +87,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     number: "01",
-    title: "Zayrro â€” Travel & Flight Booking Platform",
+    title: "Zayrro \u2014 Travel & Flight Booking Platform",
     category: "Featured Full Stack Live Project",
     image: "/zayrro.png",
     description: "A comprehensive travel booking platform that brings flights, hotels, visas, attractions and cabs into one connected experience, with live travel data and secure, mobile-friendly booking flows.",
@@ -93,7 +97,7 @@ export const projects: Project[] = [
   },
   {
     number: "02",
-    title: "Vinstar â€” Identity Verification Platform",
+    title: "Vinstar \u2014 Identity Verification Platform",
     category: "Identity Security & Verification",
     image: "/vinstar.png",
     description: "A secure identity verification platform that helps businesses onboard genuine users through document submission, guided verification and real-time request tracking.",
@@ -136,8 +140,8 @@ export const projects: Project[] = [
 ];
 
 export const education = [
-  { degree: "Master of Computer Applications", specialization: "Artificial Intelligence & Machine Learning", school: "LNCT University, Bhopal", period: "Oct 2023 â€” May 2025", result: "First Class Distinction", focus: "Web Architecture, Distributed Systems and Artificial Intelligence" },
-  { degree: "Bachelor of Computer Applications", specialization: "Computer Applications", school: "DAVV University, Indore", period: "Aug 2019 â€” Jul 2022", result: "First Division", focus: "Data Structures, Database Systems and Object-Oriented Programming" },
+  { degree: "Master of Computer Applications", specialization: "Artificial Intelligence & Machine Learning", school: "LNCT University, Bhopal", period: "Oct 2023 \u2014 May 2025", result: "First Class Distinction", focus: "Web Architecture, Distributed Systems and Artificial Intelligence" },
+  { degree: "Bachelor of Computer Applications", specialization: "Computer Applications", school: "DAVV University, Indore", period: "Aug 2019 \u2014 Jul 2022", result: "First Division", focus: "Data Structures, Database Systems and Object-Oriented Programming" },
 ];
 
 export const certifications = [

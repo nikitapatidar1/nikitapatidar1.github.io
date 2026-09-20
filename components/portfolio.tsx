@@ -8,6 +8,8 @@ import {
   ArrowUpRight,
   Braces,
   Check,
+  CheckCircle2,
+  CircleAlert,
   Code2,
   Database,
   Download,
@@ -16,6 +18,7 @@ import {
   Mail,
   MapPin,
   Menu,
+  LoaderCircle,
   Moon,
   Phone,
   Send,
@@ -47,7 +50,7 @@ const iconLinkClass = "icon-link";
 
 function Logo() {
   return (
-    <a href="#home" className="brand" aria-label="Nikita Patidar â€” back to home">
+    <a href="#home" className="brand" aria-label="Nikita Patidar - back to home">
       <span className="brand-mark">NP</span>
       <span><strong>Nikita.</strong><small>Full Stack Developer</small></span>
     </a>
@@ -123,13 +126,13 @@ function ProjectVisual({ project }: { project: Project }) {
         <div className="art-top"><span>CHAT / INSIGHTS</span><strong>12.4k messages</strong></div>
         <div className="bars"><i /><i /><i /><i /><i /><i /><i /></div>
         <div className="word-cloud"><b>weekend</b><span>meeting</span><em>project</em><small>coffee</small><strong>hello!</strong></div>
-        <div className="emoji-row"><span>ðŸ˜‚ 284</span><span>â¤ï¸ 197</span><span>ðŸ‘ 143</span></div>
+        <div className="emoji-row"><span>{"\u{1F602} 284"}</span><span>{"\u2764\uFE0F 197"}</span><span>{"\u{1F44D} 143"}</span></div>
       </div>
     );
   }
   return (
     <div className="project-art vision-art" role="img" aria-label="Abstract computer vision camera frame detecting multiple faces">
-      <div className="camera-meta"><span><i /> LIVE</span><small>CAM_01 Â· 30 FPS</small></div>
+      <div className="camera-meta"><span><i /> LIVE</span><small>CAM_01 / 30 FPS</small></div>
       <div className="face face-one"><span>face 98%</span><i /><i /></div>
       <div className="face face-two"><span>face 96%</span><i /><i /></div>
       <div className="scan-line" />
@@ -164,7 +167,8 @@ export default function Portfolio() {
   const [active, setActive] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [formMessage, setFormMessage] = useState("");
+  const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const saved = localStorage.getItem("nikita-theme") as "dark" | "light" | null;
@@ -209,13 +213,58 @@ export default function Portfolio() {
     localStorage.setItem("nikita-theme", next);
   };
 
-  const submitForm = (event: FormEvent<HTMLFormElement>) => {
+  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const subject = encodeURIComponent(String(data.get("subject")));
-    const body = encodeURIComponent(`Hi Nikita,\n\n${data.get("message")}\n\nFrom: ${data.get("name")} (${data.get("email")})`);
-    setFormMessage("Your email app is opening with the message ready to send.");
-    window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${body}`;
+    if (formStatus === "submitting") return;
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const values = {
+      name: String(data.get("name") ?? "").trim(),
+      email: String(data.get("email") ?? "").trim(),
+      subject: String(data.get("subject") ?? "").trim(),
+      message: String(data.get("message") ?? "").trim(),
+      honey: String(data.get("_honey") ?? "").trim(),
+    };
+    const errors: Record<string, string> = {};
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!values.name) errors.name = "Please enter your full name.";
+    if (!values.email) errors.email = "Please enter your email address.";
+    else if (!emailPattern.test(values.email)) errors.email = "Please enter a valid email address.";
+    if (!values.subject) errors.subject = "Please enter a subject.";
+    if (!values.message) errors.message = "Please enter your message.";
+
+    setFormErrors(errors);
+    setFormStatus("idle");
+    if (Object.keys(errors).length > 0 || values.honey) return;
+
+    setFormStatus("submitting");
+    try {
+      const response = await fetch(siteConfig.contactForm.endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          subject: values.subject,
+          message: values.message,
+          _subject: "New Portfolio Contact Message",
+          _template: "table",
+          _honey: values.honey,
+        }),
+      });
+
+      if (!response.ok) throw new Error("FormSubmit request failed");
+      form.reset();
+      setFormErrors({});
+      setFormStatus("success");
+    } catch {
+      setFormStatus("error");
+    }
   };
 
   return (
@@ -253,7 +302,7 @@ export default function Portfolio() {
             <div className="hero-actions">
               <a className="button primary" href="#projects">View my work <ArrowDownRight size={18} /></a>
               {siteConfig.resumeUrl ? (
-                <a className="button secondary" href={siteConfig.resumeUrl} download>Download resume <Download size={18} /></a>
+                <a className="button secondary" href={siteConfig.resumeUrl} download="Nikita-Patidar-Resume.pdf">Download resume <Download size={18} /></a>
               ) : (
                 <a className="button secondary" href={`mailto:${siteConfig.email}?subject=Resume request`}>Request resume <Mail size={18} /></a>
               )}
@@ -273,7 +322,7 @@ export default function Portfolio() {
 
         <section id="about" className="section-pad">
           <div className="section-wrap">
-            <SectionHeading eyebrow="01 / About" title="Engineering ideas into reliable digital products." intro="Iâ€™m a Full Stack Developer based in Indore with more than two years of combined full-time engineering and backend development experience. I care about clean architecture, responsive design, API security and products that solve real user problems." />
+            <SectionHeading eyebrow="01 / About" title="Engineering ideas into reliable digital products." intro="I'm a Full Stack Developer based in Indore with more than two years of combined full-time engineering and backend development experience. I care about clean architecture, responsive design, API security and products that solve real user problems." />
             <div className="about-grid">
               {capabilities.map(([number, title, text]) => <article className="capability-card reveal" key={title}><span>{number}</span><Sparkles size={21} /><h3>{title}</h3><p>{text}</p></article>)}
               <aside className="profile-card reveal">
@@ -306,7 +355,7 @@ export default function Portfolio() {
 
         <section id="skills" className="section-pad">
           <div className="section-wrap">
-            <SectionHeading eyebrow="03 / Skills" title="A practical toolkit for modern product engineering." intro="Technologies chosen for the problemâ€”not for the trend. My strongest work connects resilient APIs with thoughtful interfaces." />
+            <SectionHeading eyebrow="03 / Skills" title="A practical toolkit for modern product engineering." intro="Technologies chosen for the problem, not for the trend. My strongest work connects resilient APIs with thoughtful interfaces." />
             <div className="skills-grid">
               {Object.entries(skills).map(([category, items], index) => (
                 <article className={`skill-card reveal ${index === 4 ? "wide" : ""}`} key={category}>
@@ -350,7 +399,7 @@ export default function Portfolio() {
             <SectionHeading eyebrow="05 / Learning" title="A foundation built in software, systems and AI." />
             <div className="learning-grid">
               <div className="education-list">
-                {education.map((item) => <article className="education-card reveal" key={item.degree}><span className="year">{item.period}</span><div><p>{item.school}</p><h3>{item.degree}</h3><strong>{item.specialization}</strong><small>{item.result}</small><em>Focus â€” {item.focus}</em></div></article>)}
+                {education.map((item) => <article className="education-card reveal" key={item.degree}><span className="year">{item.period}</span><div><p>{item.school}</p><h3>{item.degree}</h3><strong>{item.specialization}</strong><small>{item.result}</small><em>Focus: {item.focus}</em></div></article>)}
               </div>
               <div className="certifications">
                 <p className="eyebrow"><span>Certifications</span></p>
@@ -367,19 +416,26 @@ export default function Portfolio() {
               <div className="contact-cards"><a href={`mailto:${siteConfig.email}`}><Mail /><span><small>Email</small>{siteConfig.email}</span><ArrowUpRight /></a><a href={`tel:${siteConfig.phone.replaceAll(" ", "")}`}><Phone /><span><small>Phone</small>{siteConfig.phone}</span><ArrowUpRight /></a><div><MapPin /><span><small>Location</small>{siteConfig.location}</span></div></div>
               <div className="social-row"><a href={siteConfig.github} target="_blank" rel="noreferrer"><GitFork /> GitHub</a><a href={siteConfig.linkedin} target="_blank" rel="noreferrer"><BriefcaseBusiness /> LinkedIn</a></div>
             </div>
-            <form className="contact-form reveal" onSubmit={submitForm}>
-              <div className="form-row"><label>Name<input name="name" required autoComplete="name" placeholder="Your name" /></label><label>Email<input name="email" type="email" required autoComplete="email" placeholder="you@company.com" /></label></div>
-              <label>Subject<input name="subject" required placeholder="What would you like to discuss?" /></label>
-              <label>Message<textarea name="message" required minLength={20} rows={6} placeholder="Tell me a little about the opportunity or project..." /></label>
-              <button className="button primary" type="submit">Send message <Send size={17} /></button>
-              <p className="form-feedback" role="status">{formMessage}</p>
+            <form className="contact-form reveal" onSubmit={submitForm} noValidate>
+              <div className="honeypot" aria-hidden="true"><label htmlFor="contact-company">Company website</label><input id="contact-company" name="_honey" type="text" tabIndex={-1} autoComplete="off" /></div>
+              <div className="form-row">
+                <label htmlFor="contact-name">Full Name<input id="contact-name" name="name" required autoComplete="name" placeholder="Your full name" aria-invalid={Boolean(formErrors.name)} aria-describedby={formErrors.name ? "contact-name-error" : undefined} onChange={() => setFormErrors((current) => ({ ...current, name: "" }))} />{formErrors.name && <span className="field-error" id="contact-name-error">{formErrors.name}</span>}</label>
+                <label htmlFor="contact-email">Email Address<input id="contact-email" name="email" type="email" required autoComplete="email" placeholder="you@company.com" aria-invalid={Boolean(formErrors.email)} aria-describedby={formErrors.email ? "contact-email-error" : undefined} onChange={() => setFormErrors((current) => ({ ...current, email: "" }))} />{formErrors.email && <span className="field-error" id="contact-email-error">{formErrors.email}</span>}</label>
+              </div>
+              <label htmlFor="contact-subject">Subject<input id="contact-subject" name="subject" required placeholder="What would you like to discuss?" aria-invalid={Boolean(formErrors.subject)} aria-describedby={formErrors.subject ? "contact-subject-error" : undefined} onChange={() => setFormErrors((current) => ({ ...current, subject: "" }))} />{formErrors.subject && <span className="field-error" id="contact-subject-error">{formErrors.subject}</span>}</label>
+              <label htmlFor="contact-message">Message<textarea id="contact-message" name="message" required rows={6} placeholder="Tell me a little about the opportunity or project..." aria-invalid={Boolean(formErrors.message)} aria-describedby={formErrors.message ? "contact-message-error" : undefined} onChange={() => setFormErrors((current) => ({ ...current, message: "" }))} />{formErrors.message && <span className="field-error" id="contact-message-error">{formErrors.message}</span>}</label>
+              <button className="button primary" type="submit" disabled={formStatus === "submitting"}>{formStatus === "submitting" ? <><LoaderCircle className="submit-spinner" size={17} /> Sending...</> : <>Send Message <Send size={17} /></>}</button>
+              <div className={`form-notification ${formStatus === "success" ? "success" : formStatus === "error" ? "error" : ""}`} role="status" aria-live="polite">
+                {formStatus === "success" && <><CheckCircle2 aria-hidden="true" /><span>Thank you! Your message has been sent successfully. I'll get back to you soon.</span></>}
+                {formStatus === "error" && <><CircleAlert aria-hidden="true" /><span>Sorry, your message could not be sent. Please try again or <a href={`mailto:${siteConfig.contactForm.recipientEmail}`}>email me directly</a>.</span></>}
+              </div>
             </form>
           </div>
         </section>
       </main>
 
       <footer>
-        <div className="footer-wrap"><Logo /><p>Designed and built by Nikita Patidar.<br />Â© {new Date().getFullYear()} All rights reserved.</p><a className="back-top" href="#home">Back to top <ArrowUpRight size={16} /></a></div>
+        <div className="footer-wrap"><Logo /><p>Designed and built by Nikita Patidar.<br />&copy; {new Date().getFullYear()} All rights reserved.</p><a className="back-top" href="#home">Back to top <ArrowUpRight size={16} /></a></div>
       </footer>
       <ProjectDialog project={selectedProject} onClose={() => setSelectedProject(null)} />
     </div>
